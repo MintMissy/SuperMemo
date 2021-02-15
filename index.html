@@ -18,7 +18,7 @@
         margin-top: 30px;
     }
 
-    #plansza {
+    #board {
         float: left;
 
         width: 620px;
@@ -27,22 +27,52 @@
         background-color: #10111A;
     }
 
-    .karta {
-        width: 130px;
-        height: 130px;
+    .card {
+        background-color: transparent;
+        width: 129px;
+        height: 129px;
+        border: 1px solid #10111A;
 
         margin-left: 20px;
         margin-top: 20px;
         float: left;
 
-        background-color: #00ffcc;
-
-        font-size: 80px;
+        font-size: 100px;
         text-align: center;
+
+        perspective: 1000px;
     }
 
-    .odkryta {
+    .cardInner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    .flippedCard .cardInner {
+        transform: rotateY(180deg);
+    }
+
+    .cardFront, .cardBack {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .cardFront {
+        background-color: #00ffcc;
+        color: black;
+    }
+
+    .cardBack {
         background-color: #00ff5d;
+        color: #161824;
+        transform: rotateY(180deg);
     }
 
     #sideBar {
@@ -67,7 +97,7 @@
         font-family: Squada One, serif;
 
         opacity: 95%;
-        color: white;
+        color: #161824;
         text-align: center;
         font-size: 90px;
     }
@@ -83,11 +113,19 @@
         font-size: 40px;
     }
 
-    #progressBar {
+    #blankBar {
         width: 710px;
         height: 30px;
 
-        background-color: aliceblue;
+        background-color: gray;
+    }
+
+    #progressBar {
+        width: 0%;
+        height: 30px;
+
+        opacity: 95%;
+        background-color: #00ff5d;
     }
 
     #statisticsBackground {
@@ -102,7 +140,7 @@
         font-family: Squada One, serif;
 
         opacity: 95%;
-        color: white;
+        color: #161824;
         text-align: center;
         font-size: 90px;
     }
@@ -140,51 +178,70 @@
 
     #footer {
         clear: both;
-        height: 95px;
+        height: 55px;
 
         margin-top: 15px;
 
         background-color: #10111A;
+
+        font-family: Squada One, serif;
+
+        color: #161824;
+        padding: 20px;
+        font-size: 50px;
+        text-align: center;
     }
 
 </style>
-<body onload="generuj()">
+<body onload="generate()">
 <script type="text/javascript">
     let resetTime;
-    let odkryteKarty = [];
-    let losoweLiterki = [];
+    let flippedCards = [];
+    let randomSymbols = [];
     let points = 0;
 
-    function generuj() {
+    function generate() {
 
-        let literki = ['♠', '♣', '♥', '♪', '☯', '★', '✿', '✘', '♛', '✔', '♠', '♣', '♥', '♪', '☯', '★', '✿', '✘', '♛', '✔'];
+        let letters = ['♔', '♕', '♖', '♗', '♘', '♙', '♤', '♧', '♡', '♢'];
+        for (let i = 0; i < 10; i++) {
+            letters.push(letters[i]);
+        }
 
         for (let i = 0; i < 1; i++) {
-            let los1 = Math.floor(Math.random() * literki.length);
-            let los2 = Math.floor(Math.random() * literki.length);
-            [literki[los1], literki[los2]] = [literki[los2], literki[los1]];
+            let gamble1 = Math.floor(Math.random() * letters.length);
+            let gamble2 = Math.floor(Math.random() * letters.length);
+            [letters[gamble1], letters[gamble2]] = [letters[gamble2], letters[gamble1]];
         }
 
         for (let i = 0; i < 20; i++) {
-            let los = Math.floor(Math.random() * (literki.length));
-            losoweLiterki[i] = literki[los];
-            literki.splice(los, 1);
-            plansza.innerHTML += '<div id="karta' + i + '" onclick="odkryj(this)" class="karta"></div>';
+            let los = Math.floor(Math.random() * (letters.length));
+            randomSymbols[i] = letters[los];
+            letters.splice(los, 1);
+            board.innerHTML += '<div id="card' + i + '" onclick="flip(this)" class="card">\n' +
+                '    <div class="cardInner">\n' +
+                '        <div class="cardFront">\n' +
+                '\n' +
+                '        </div>\n' +
+                '        <div class="cardBack">\n' +
+                randomSymbols[i] + '\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>';
         }
     }
 
-    let limitOdkryj = false;
-    let ostatnioOdkryta;
+    let canFlip = false;
+    let lastFlipped;
     let startDate;
     let stepsNumber = 0;
 
-    function odkryj(karta) {
+    function flip(card) {
 
-        if (limitOdkryj === true) {
+        if (canFlip === true) {
             return 0;
         }
 
-        if (ostatnioOdkryta === karta.id.substr(5)) {
+        if (lastFlipped === card.id.substr(4)) {
             return 0;
         }
 
@@ -193,44 +250,43 @@
             startDate = startDate.getTime();
         }
 
-        ostatnioOdkryta = karta.id.substr(5);
+        lastFlipped = card.id.substr(4);
 
-        karta.innerHTML = losoweLiterki[karta.id.substr(5)];
-        karta.classList.add('odkryta');
-        odkryteKarty[odkryteKarty.length] = karta;
+        card.classList.add('flippedCard');
 
-        if (odkryteKarty.length < 2) {
+        flippedCards[flippedCards.length] = card;
+
+        if (flippedCards.length < 2) {
             return 0;
         }
 
-        if (losoweLiterki[odkryteKarty[0].id.substr(5)] === losoweLiterki[odkryteKarty[1].id.substr(5)]) {
-            limitOdkryj = true;
+        if (randomSymbols[flippedCards[0].id.substr(4)] === randomSymbols[flippedCards[1].id.substr(4)]) {
+            canFlip = true;
             setStep();
 
             setTimeout(() => {
-                odkryteKarty[0].style.visibility = "hidden";
-                odkryteKarty[1].style.visibility = "hidden";
-                odkryteKarty = [];
-                limitOdkryj = false;
+                flippedCards[0].style.visibility = "hidden";
+                flippedCards[1].style.visibility = "hidden";
+                flippedCards = [];
+                canFlip = false;
                 points += 1;
-            }, 500)
+                setBar(points);
+            }, 900);
 
             return 0;
         }
 
-        if (losoweLiterki[odkryteKarty[0].id.substr(5)] !== losoweLiterki[odkryteKarty[1].id.substr(5)]) {
-            limitOdkryj = true;
+        if (randomSymbols[flippedCards[0].id.substr(4)] !== randomSymbols[flippedCards[1].id.substr(4)]) {
+            canFlip = true;
             setStep();
 
             setTimeout(() => {
-                odkryteKarty[0].innerHTML = "";
-                odkryteKarty[0].classList.remove('odkryta');
-                odkryteKarty[1].innerHTML = "";
-                odkryteKarty[1].classList.remove('odkryta');
-                odkryteKarty = [];
-                limitOdkryj = false;
-                ostatnioOdkryta = undefined;
-            }, 800)
+                flippedCards[0].classList.remove('flippedCard');
+                flippedCards[1].classList.remove('flippedCard');
+                flippedCards = [];
+                canFlip = false;
+                lastFlipped = undefined;
+            }, 1200);
 
             return 0;
         }
@@ -243,9 +299,11 @@
             return 0;
         }
 
-        let currentTime = new Date();
-        currentTime = currentTime.getTime();
-        timer.innerHTML = "<p>Timer<br> " + Math.floor((startDate - currentTime) / -1000) + "</p>"
+        if(points < 10){
+            let currentTime = new Date();
+            currentTime = currentTime.getTime();
+            timer.innerHTML = "<p>timer<br> " + Math.floor((startDate - currentTime) / -1000) + "</p>";
+        }
     }
 
     if (points < 10) {
@@ -254,22 +312,40 @@
 
     function setStep() {
 
-        stepsNumber += 1
-        steps.innerHTML = "<p>Steps<br> " + stepsNumber + "</p>"
+        stepsNumber += 1;
+        steps.innerHTML = "<p>steps<br> " + stepsNumber + "</p>";
     }
 
-    /*TODO bar https://www.w3schools.com/howto/howto_js_progressbar.asphttps://www.w3schools.com/howto/howto_js_progressbar.asp*/
-    /*TODO fliped cards https://www.w3schools.com/howto/howto_css_flip_card.asp*/
+    function setBar(points) {
 
+        let percentages = (points / 10) * 100;
+        let bar = document.getElementById("progressBar");
+        let currentPercentages = bar.style.width;
+        currentPercentages = currentPercentages.replace("%", "");
+
+        var fillBar = setInterval(barFrames, 15);
+
+        function barFrames() {
+            if (currentPercentages >= percentages) {
+                clearInterval(fillBar);
+            } else {
+                currentPercentages++;
+                bar.style.width = currentPercentages + '%';
+                progressPercents.innerHTML = currentPercentages + "%";
+            }
+        }
+    }
 </script>
 
 <div id="container">
-    <div id="plansza"></div>
+    <div id="board"></div>
     <div id="sideBar">
         <div id="progressBackground">
             <div id="progressText">Game Progress</div>
-            <div id="progressPercents">15%</div>
-            <div id="progressBar"></div>
+            <div id="progressPercents">0%</div>
+            <div id="blankBar">
+                <div id="progressBar"></div>
+            </div>
         </div>
         <div id="statisticsBackground">
             <div id="statisticsText">Statistics</div>
@@ -278,7 +354,9 @@
         </div>
     </div>
 </div>
-<div id="footer"></div>
-
+<div id="footer">
+    <div style="text-align: left; float: left">Credits Dawid Kostka</div>
+    <div style="text-align: right">https://github.com/TheMissyy</div>
+</div>
 </body>
 </html>
