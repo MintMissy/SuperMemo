@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45caeeb7-c0e7-48b2-bf3d-abe09ef9391c" name="Default Changelist" comment="" />
+    <list default="true" id="45caeeb7-c0e7-48b2-bf3d-abe09ef9391c" name="Default Changelist" comment="Add files to git">
+      <change afterPath="$PROJECT_DIR$/das.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,11 +48,40 @@
       <workItem from="1613074182694" duration="10317000" />
       <workItem from="1613120860911" duration="2263000" />
       <workItem from="1613123272062" duration="4475000" />
-      <workItem from="1613133269009" duration="3935000" />
+      <workItem from="1613133269009" duration="4124000" />
+      <workItem from="1613137435705" duration="257000" />
+      <workItem from="1613326898363" duration="611000" />
+      <workItem from="1613327639788" duration="229000" />
+      <workItem from="1613390869456" duration="8000" />
+      <workItem from="1613406350781" duration="6039000" />
     </task>
+    <task id="LOCAL-00001" summary="Add files to git">
+      <created>1613137300982</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1613137300982</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add files to git" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add files to git" />
   </component>
 </project>
