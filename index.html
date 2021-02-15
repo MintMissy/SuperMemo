@@ -202,21 +202,21 @@
 
     function generate() {
 
-        let letters = ['♔', '♕', '♖', '♗', '♘', '♙', '♤', '♧', '♡', '♢'];
+        let symbols = ['♔', '♕', '♖', '♗', '♘', '♙', '♤', '♧', '♡', '♢'];
         for (let i = 0; i < 10; i++) {
-            letters.push(letters[i]);
+            symbols.push(symbols[i]);
         }
 
         for (let i = 0; i < 1; i++) {
-            let gamble1 = Math.floor(Math.random() * letters.length);
-            let gamble2 = Math.floor(Math.random() * letters.length);
-            [letters[gamble1], letters[gamble2]] = [letters[gamble2], letters[gamble1]];
+            let gamble1 = Math.floor(Math.random() * symbols.length);
+            let gamble2 = Math.floor(Math.random() * symbols.length);
+            [symbols[gamble1], symbols[gamble2]] = [symbols[gamble2], symbols[gamble1]];
         }
 
         for (let i = 0; i < 20; i++) {
-            let los = Math.floor(Math.random() * (letters.length));
-            randomSymbols[i] = letters[los];
-            letters.splice(los, 1);
+            let los = Math.floor(Math.random() * (symbols.length));
+            randomSymbols[i] = symbols[los];
+            symbols.splice(los, 1);
             board.innerHTML += '<div id="card' + i + '" onclick="flip(this)" class="card">\n' +
                 '    <div class="cardInner">\n' +
                 '        <div class="cardFront">\n' +
